@@ -1,0 +1,86 @@
+#+TITLE: Desgin of My Own Personal Layer
+
+
+* Configuration related to dart language
+
+All setup and configurations related to dart language will be defined in my own
+dart layer.
+
+It includes the org structure template for dart code block. This is unusual for
+language layer, but it's my personal language layer. I guess that it's OK to
+include my own template.
+
+
+* Further Configuration to org package
+
+Eric's configuration has already some configuration to org, I need to be
+careful not to overriding them.
+
+Here is the major potential conflicts defined in Eric's post-init-org:
+
+#+BEGIN_SRC emacs-lisp
+(setq org-structure-template-alist
+        '(("n" "#+NAME: ?")
+          ("L" "#+LaTeX: ")
+          ("h" "#+HTML: ")
+          ("q" "#+BEGIN_QUOTE\n\n#+END_QUOTE")
+          ("s" "#+BEGIN_SRC ?\n\n#+END_SRC")
+          ("se" "#+BEGIN_SRC emacs-lisp\n\n#+END_SRC")
+          ("sp" "#+BEGIN_SRC python\n\n#+END_SRC")))
+#+END_SRC
+
+It uses setq, if it's executed after mine, it will override mine.
+
+How can I ensure my penalization layer is executed after Eric's?
+
+In my further configuration, I shall use the following code pattern:
+
+#+BEGIN_SRC emacs-lisp
+(setq org-structure-template-alist (append org-structure-template-alist '(...)))
+#+END_SRC
+
+Where ... would be the elements of my own definitions.
+
+I like Eric's conventions:
+<n for
+#+NAME:
+
+<L for
+#+LaTeX:
+
+<h for
+#+HTML:
+
+<q for
+#+BEGIN_QUOTE
+
+#+END_QUOTE
+
+<s for
+#+BEGIN_SRC
+
+#+END_SRC
+
+<se for
+#+BEGIN_SRC emacs-lisp
+
+#+END_SRC
+
+<sp for
+#+BEGIN_SRC python
+
+#+END_SRC
+
+<sd for
+#+BEGIN_SRC dart
+
+#+END_SRC
+
+* Answer to the question of layer execution order
+
+The following is copied from https://github.com/syl20bnr/spacemacs/blob/master/doc/LAYERS.org#load-ordering
+
+** Load ordering
+In Spacemacs, layers are loaded in order of inclusion in the dotfile, and packages are loaded in alphabetical order. In the rare cases where you make use of this property, you should make sure to document it well. Many will assume that layers can be included in arbitrary order (which is true in most cases), and that packages can be renamed without problems (which is also in most cases).
+
+Preferably, write your layer so that it is independent of load ordering. The pre- and post-init functions are helpful, together with configuration-layer/package-usedp.

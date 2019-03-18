@@ -1,2 +1,2 @@
-# personal-layers-spacemacs
-Yu Shen's work on personal layers in spacemacs
+# elisp
+Emacs lisp code I have developed for my own use
