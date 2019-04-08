@@ -8,8 +8,8 @@
 (require 'ox-extra)
 (require 'ox-latex)
 (require 'bibtex)
-(load "~/programming/write-slides-with-emacs-org-reveal/org-reveal/ox-reveal.el")
-
+;;(load "~/programming/write-slides-with-emacs-org-reveal/org-reveal/ox-reveal.el")
+(load "~/elisp/org-reveal/ox-reveal.el")
 (provide 'org-config)
 
 ;;; Bindings
@@ -43,64 +43,85 @@
 
 ;;; Templates
 
+;; New and simpler org-structure-template-alist after org-mode 9.2:
 (setq org-structure-template-alist
-      '(;; Standard Blocks
-        ("n" "#+NAME: ?")
-        ("q" "#+BEGIN_QUOTE\n\n#+END_QUOTE")
+  '(("a" . "export ascii")
+     ("c" . "center")
+     ("C" . "comment")
+     ("e" . "example")
+     ("E" . "export")
+     ("h" . "export html")
+     ("l" . "export latex")
+     ("q" . "quote")
+     ("s" . "src ? :tangle :noweb no-export")
+     ("uml" . "src plantuml :file ?.png\n@startuml\n\n\@enduml")
+     ("v" . "verse")))
+;; For more sophisticated code boilers, use yas-snippet
+;; I'm defining the same keys as those for easy-template
+;; Note, the command to start the new org-structure-template in spacemacs is , ib
+;; By (require 'org-tempo) would enable <s TAB substitution, but its substitution is partial not as as complete as , ib
 
-        ;; Language Blocks
-        ("c"  "#+BEGIN_SRC clojure\n\n#+END_SRC")
-        ("d"  "#+BEGIN_SRC dot\n\n#+END_SRC")
-        ("e"  "#+BEGIN_SRC emacs-lisp\n\n#+END_SRC")
-        ("h"  "#+BEGIN_SRC haskell\n\n#+END_SRC")
-        ("la" "#+BEGIN_SRC latex\n\n#+END_SRC")
-        ("l"  "#+BEGIN_SRC lisp\n\n#+END_SRC")
-        ("p"  "#+BEGIN_SRC python\n\n#+END_SRC")
+;; The following of "easy-template" no longerr works for org-mode 9.2
+;; (setq org-structure-template-alist
+;;       '(;; Standard Blocks
 
-        ;; html-export org-html-themese collapse properties slug
-        ("clps" ":PROPERTIES:\n :HTML_CONTAINER_CLASS: hsCollapsed\n :END:\n")
+;;         ("n" "#+NAME: ?")
+;;         ("q" "#+BEGIN_QUOTE\n\n#+END_QUOTE")
 
-        ;; Hugo title slug template
-        ("b" "#+TITLE: \n#+SLUG: \n#+DATE: 2018-mm-dd
-#+CATEGORIES: \n#+SUMMARY: \n#+DRAFT: false")
-        ;; Yu Shen's own definitions:
-        ("E" "#+BEGIN_SRC emacs-lisp\n?\n#+END_SRC")
-        ("S" "#+BEGIN_SRC sh\n?\n#+END_SRC")
-        ("uml" "#+BEGIN_SRC plantuml :file uml.png \n?\n#+END_SRC\n#results:")
-        ("ditaa" "#+NAME:?\n#+BEGIN_SRC ditaa \n\n#+END_SRC\n"
-         "\n<src lang=\"ditaa\">\n?\n</src>")
-        ("sql" "#+NAME:?\n#+BEGIN_SRC sql :noweb no-export :tangle \n\n#+END_SRC\n"
-         "<src lang=\"sql\">\n?\n</src>")
-        ;;  :engine mssql :cmdline \"-S localhost -U SA -P <my password>\" \n\n#+END_SRC\n"
-        ;; is the setting to execute SQL statements with Microsoft SQL server with my local set up
-        ;; The setting is best set as global properties with org-file
+;;         ;; Language Blocks
+;;         ("src" "#+BEGIN_SRC ?\n\n#+END_SRC")
+;;         ("c"  "#+BEGIN_SRC clojure\n\n#+END_SRC")
+;;         ("d"  "#+BEGIN_SRC dot\n\n#+END_SRC")
+;;         ("e"  "#+BEGIN_SRC emacs-lisp\n\n#+END_SRC")
+;;         ("h"  "#+BEGIN_SRC haskell\n\n#+END_SRC")
+;;         ("la" "#+BEGIN_SRC latex\n\n#+END_SRC")
+;;         ("l"  "#+BEGIN_SRC lisp\n\n#+END_SRC")
+;;         ("p"  "#+BEGIN_SRC python\n\n#+END_SRC")
 
-        ("ps" "#+BEGIN_SRC python \n?\n#+END_SRC\n" "<src lang=\"python\">\n?\n</src>")
-        ("p" "#+NAME:?\n#+BEGIN_SRC python :noweb no-export :tangle  \n\n#+END_SRC\n"
-         "<src lang=\"python\">\n?\n</src>")
-        ("pe" "#+END_SRC\n\n?\n#+BEGIN_SRC python \n" "</src>\n<src lang=\"python\">")
-        ("cc" "#+NAME:?\n#+BEGIN_SRC C++ :noweb no-export :tangle :main no \n\n#+END_SRC\n"
-         "<src lang=\"C++\">\n?\n</src>")
-        ("clj" "#+NAME:?\n#+BEGIN_SRC clojure \n\n#+END_SRC\n"
-         "\n<src lang=\"clojure\">\n?\n</src>")
-        ("cs" "#+END_SRC\n\n\n#+NAME: ?\n#+BEGIN_SRC clojure \n"
-         "</src>\n<src lang=\"clojure\">")
-        ("r" "#+NAME:?\n#+BEGIN_SRC R \n\n#+END_SRC\n"
-         "\n<src lang=\"R\">\n?\n</src>")
-        ("rs" "#+END_SRC\n\n\n#+NAME: ?\n#+BEGIN_SRC R \n" "</src>\n<src lang=\"R\">")
-        ("j" "#+NAME:?\n#+BEGIN_SRC javascript \n\n#+END_SRC\n"
-         "\n<src lang=\"javascript\">\n?\n</src>")
-        ("js" "#+END_SRC\n\n\n#+NAME: ?\n#+BEGIN_SRC javascript \n"
-         "</src>\n<src lang=\"javascript\">")
-        ("elsp" "#+NAME:?\n#+BEGIN_SRC emacs-lisp \n\n#+END_SRC\n"
-         "\n<src lang=\"emacs-lisp\">\n?\n</src>")
-        ("elsps" "#+END_SRC\n\n\n#+NAME: ?\n#+BEGIN_SRC emacs-lisp \n"
-         "</src>\n<src lang=\"emacs-lisp\">")
-        ("shell" "#+NAME:?\n#+BEGIN_SRC shell \n\n#+END_SRC\n"
-         "\n<src lang=\"shell\">\n?\n</src>")
-        ("l" "#+NAME:?\n#+BEGIN_SRC latex \n\n#+END_SRC\n"
-         "\n<src lang=\"latex\">\n?\n</src>"))
-      )
+;;         ;; html-export org-html-themese collapse properties slug
+;;         ("clps" ":PROPERTIES:\n :HTML_CONTAINER_CLASS: hsCollapsed\n :END:\n")
+
+;;         ;; Hugo title slug template
+;;         ("b" "#+TITLE: \n#+SLUG: \n#+DATE: 2018-mm-dd
+;; #+CATEGORIES: \n#+SUMMARY: \n#+DRAFT: false")
+;;         ;; Yu Shen's own definitions:
+;;         ("E" "#+BEGIN_SRC emacs-lisp\n?\n#+END_SRC")
+;;         ("S" "#+BEGIN_SRC sh\n?\n#+END_SRC")
+;;         ("uml" "#+BEGIN_SRC plantuml :file uml.png\n@startuml\n?\n@enduml\n#+END_SRC\n#results:")
+;;         ("ditaa" "#+NAME:?\n#+BEGIN_SRC ditaa \n\n#+END_SRC\n"
+;;          "\n<src lang=\"ditaa\">\n?\n</src>")
+;;         ("sql" "#+NAME:?\n#+BEGIN_SRC sql :noweb no-export :tangle \n\n#+END_SRC\n"
+;;          "<src lang=\"sql\">\n?\n</src>")
+;;         ;;  :engine mssql :cmdline \"-S localhost -U SA -P <my password>\" \n\n#+END_SRC\n"
+;;         ;; is the setting to execute SQL statements with Microsoft SQL server with my local set up
+;;         ;; The setting is best set as global properties with org-file
+
+;;         ("ps" "#+BEGIN_SRC python \n?\n#+END_SRC\n" "<src lang=\"python\">\n?\n</src>")
+;;         ("p" "#+NAME:?\n#+BEGIN_SRC python :noweb no-export :tangle  \n\n#+END_SRC\n"
+;;          "<src lang=\"python\">\n?\n</src>")
+;;         ("pe" "#+END_SRC\n\n?\n#+BEGIN_SRC python \n" "</src>\n<src lang=\"python\">")
+;;         ("cc" "#+NAME:?\n#+BEGIN_SRC C++ :noweb no-export :tangle :main no \n\n#+END_SRC\n"
+;;          "<src lang=\"C++\">\n?\n</src>")
+;;         ("clj" "#+NAME:?\n#+BEGIN_SRC clojure \n\n#+END_SRC\n"
+;;          "\n<src lang=\"clojure\">\n?\n</src>")
+;;         ("cs" "#+END_SRC\n\n\n#+NAME: ?\n#+BEGIN_SRC clojure \n"
+;;          "</src>\n<src lang=\"clojure\">")
+;;         ("r" "#+NAME:?\n#+BEGIN_SRC R \n\n#+END_SRC\n"
+;;          "\n<src lang=\"R\">\n?\n</src>")
+;;         ("rs" "#+END_SRC\n\n\n#+NAME: ?\n#+BEGIN_SRC R \n" "</src>\n<src lang=\"R\">")
+;;         ("j" "#+NAME:?\n#+BEGIN_SRC javascript \n\n#+END_SRC\n"
+;;          "\n<src lang=\"javascript\">\n?\n</src>")
+;;         ("js" "#+END_SRC\n\n\n#+NAME: ?\n#+BEGIN_SRC javascript \n"
+;;          "</src>\n<src lang=\"javascript\">")
+;;         ("elsp" "#+NAME:?\n#+BEGIN_SRC emacs-lisp \n\n#+END_SRC\n"
+;;          "\n<src lang=\"emacs-lisp\">\n?\n</src>")
+;;         ("elsps" "#+END_SRC\n\n\n#+NAME: ?\n#+BEGIN_SRC emacs-lisp \n"
+;;          "</src>\n<src lang=\"emacs-lisp\">")
+;;         ("shell" "#+NAME:?\n#+BEGIN_SRC shell \n\n#+END_SRC\n"
+;;          "\n<src lang=\"shell\">\n?\n</src>")
+;;         ("l" "#+NAME:?\n#+BEGIN_SRC latex \n\n#+END_SRC\n"
+;;          "\n<src lang=\"latex\">\n?\n</src>"))
+;;       )
 
 ;;; Org Blocks
 
@@ -109,7 +130,7 @@
 (defun org-toggle-blocks ()
   (interactive)
   (if org-blocks-hidden
-      (org-show-block-all)
+    (org-show-block-all)
     (org-hide-block-all))
   (setq-local org-blocks-hidden (not org-blocks-hidden)))
 
@@ -262,8 +283,10 @@
 
 ;;; Yu Shen's babel related customization
 
-(load "~/programming/emacs-lisp/literate-tools.el")
-(setq Org-Reveal-root "file:///home/yubrshen/programming/write-slides-with-emacs-org-reveal/reveal.js")
+;; (load "~/programming/emacs-lisp/literate-tools.el")
+(load "~/elisp/spacemacs/layers/yubrshen/local/literate-tools/literate-tools.el")
+(setq Org-Reveal-root "~/yshen/Dropbox/reveal.js")
+;; (setq Org-Reveal-root "file:///home/yubrshen/programming/write-slides-with-emacs-org-reveal/reveal.js")
 (setq Org-Reveal-title-slide nil)
 
 ;;; My keybinding
