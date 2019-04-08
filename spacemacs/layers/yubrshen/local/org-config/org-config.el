@@ -218,6 +218,10 @@
 ;; There are a lot more configuration to learn from
 ;; https://github.com/kaushalmodi/.emacs.d/blob/42831e8997f7a3c90bf4bd37ae9f03c48277781d/setup-files/setup-org.el#L413-L584
 
+;;;;; Setup for exporting to Freemind
+
+(require 'ox-freemind)
+;; (require 'org-freeplane) ; not working
 ;;; Babel
 
 (setq org-confirm-babel-evaluate   nil)
