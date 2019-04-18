@@ -8,8 +8,8 @@
 (require 'ox-extra)
 (require 'ox-latex)
 (require 'bibtex)
-;;(load "~/programming/write-slides-with-emacs-org-reveal/org-reveal/ox-reveal.el")
-(load "~/elisp/org-reveal/ox-reveal.el")
+(load "../../../../../org-reveal/ox-reveal.el")
+;; (load "~/elisp/org-reveal/ox-reveal.el")
 (provide 'org-config)
 
 ;;; Bindings
@@ -284,7 +284,8 @@
 ;;; Yu Shen's babel related customization
 
 ;; (load "~/programming/emacs-lisp/literate-tools.el")
-(load "~/elisp/spacemacs/layers/yubrshen/local/literate-tools/literate-tools.el")
+;;(load "~/elisp/spacemacs/layers/yubrshen/local/literate-tools/literate-tools.el")
+(load "../literate-tools/literate-tools.el")
 (setq Org-Reveal-root "~/yshen/Dropbox/reveal.js")
 ;; (setq Org-Reveal-root "file:///home/yubrshen/programming/write-slides-with-emacs-org-reveal/reveal.js")
 (setq Org-Reveal-title-slide nil)
