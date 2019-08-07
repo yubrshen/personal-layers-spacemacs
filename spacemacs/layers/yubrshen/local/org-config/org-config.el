@@ -12,7 +12,9 @@
 ;;;; Setup reveal
 
 ;;(load "~/programming/write-slides-with-emacs-org-reveal/org-reveal/ox-reveal.el")
-(load "~/elisp/org-reveal/ox-reveal.el")
+;;(load "~/elisp/org-reveal/ox-reveal.el")
+(load "../../../../../org-reveal/ox-reveal.el")
+;; (load "~/elisp/org-reveal/ox-reveal.el")
 (provide 'org-config)
 ;;;; Setup for exportting to freemind (ox-freemind)
 ;; After using org-freemind-export-to-freemind a few times by calling the funciton, then option shows up in the org-export-dispatch menu
@@ -308,7 +310,8 @@
 ;;; Yu Shen's babel related customization
 
 ;; (load "~/programming/emacs-lisp/literate-tools.el")
-(load "~/elisp/spacemacs/layers/yubrshen/local/literate-tools/literate-tools.el")
+;;(load "~/elisp/spacemacs/layers/yubrshen/local/literate-tools/literate-tools.el")
+(load "../literate-tools/literate-tools.el")
 (setq Org-Reveal-root "~/yshen/Dropbox/reveal.js")
 ;; (setq Org-Reveal-root "file:///home/yubrshen/programming/write-slides-with-emacs-org-reveal/reveal.js")
 (setq Org-Reveal-title-slide nil)
