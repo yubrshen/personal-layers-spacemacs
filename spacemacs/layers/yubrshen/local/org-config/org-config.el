@@ -14,8 +14,7 @@
 ;;(load "~/programming/write-slides-with-emacs-org-reveal/org-reveal/ox-reveal.el")
 ;;(load "~/elisp/org-reveal/ox-reveal.el")
 (load "../../../../../org-reveal/ox-reveal.el")
-;; (load "~/elisp/org-reveal/ox-reveal.el")
-(provide 'org-config)
+
 ;;;; Setup for exportting to freemind (ox-freemind)
 ;; After using org-freemind-export-to-freemind a few times by calling the funciton, then option shows up in the org-export-dispatch menu
 ;; No more configuration than the following is needed.
@@ -342,3 +341,6 @@
       '((sequence "TODO(t)" "|" "DONE(d)")
         (sequence "REPORT(r)" "BUG(b)" "KNOWNCAUSE(k)" "|" "FIXED(f)")
         (sequence "HOLD(h)" "|" "PNEDING(p)" "|"  "CANCELED(c)")))
+
+;;; Provide
+(provide 'org-config)
