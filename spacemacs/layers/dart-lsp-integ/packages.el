@@ -1,16 +1,16 @@
 ;;; Dart Layer -*- lexical-binding: t; -*-
-(message "Entering dart/packages.el")
-(setq dart-packages
-  '(;; Owned packages
-     dart-mode
-     ob-dart
-     ;; Unowned packages
-     org
-     ))
+(message "Entering dart-lsp-integ/packages.el")
+(setq dart-lsp-integ-packages
+      '(;; Owned packages
+        dart-mode
+        ob-dart
+        ;; Unowned packages
+        org
+        ))
 
 ;;; Owned Packages
 ;;;; dart-mode
-(defun dart/init-dart-mode ()
+(defun dart-lsp-integ/init-dart-mode ()
   (use-package dart-mode
     :defer t
     :config
@@ -19,9 +19,9 @@
       (defun project-try-dart (dir)         ; The following snippet assists project.el
         ;; in finding the project root for your dart file. It's required by both eglot and lsp
         (let ((project (or (locate-dominating-file dir "pubspec.yaml")
-                         (locate-dominating-file dir "BUILD"))))
+                           (locate-dominating-file dir "BUILD"))))
           (if project
-            (cons 'dart project)
+              (cons 'dart project)
             (cons 'transient dir))))
       (add-hook 'project-find-functions #'project-try-dart)
       (cl-defmethod project-roots ((project (head dart)))
@@ -41,7 +41,7 @@
 
 ;;;; ob-dart
 
-(defun dart/init-ob-dart ()
+(defun dart-lsp-integ/init-ob-dart ()
   (use-package ob-dart
     :ensure t
     :config
@@ -57,12 +57,12 @@
 ;;; Unowned packages
 
 ;;;; org
-(defun dart/post-init-org ()
+(defun dart-lsp-integ/post-init-org ()
   (setq org-structure-template-alist
-    (append
-      '(("sd" "#+BEGIN_SRC dart :noweb no-export\n\n#+END_SRC"))
-      ;; add :noweb no-export to support multiple levels of enclosing of code blocks
-      org-structure-template-alist))
+        (append
+         '(("sd" "#+BEGIN_SRC dart :noweb no-export\n\n#+END_SRC"))
+         ;; add :noweb no-export to support multiple levels of enclosing of code blocks
+         org-structure-template-alist))
   ;; (add-to-list 'org-babel-load-languages  '(dart . t))
   ;; The above does not work to avoid the following error:
   ;; An error occurred while post-configuring org in layer dart (error: (void-variable org-babel-load-languages))

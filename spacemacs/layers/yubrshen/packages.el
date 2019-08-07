@@ -5,25 +5,34 @@
 
 ;;; Declare packages to be customized
 (setq yubrshen-packages
-  '((literate-tools :location local)
-     (org-config :location local)       ; use org-config of my old config for org as a package as is.
-     ;; It actually breaks when I don't require org.
+      '((yushen-personalization :location local)
+        (literate-tools :location local)
+        (org-config :location local)       ; use org-config of my old config for org as a package as is.
+        ;; It actually breaks when I don't require org.
 
-     ;; plantuml-mode
-     ;; Unowned
+        ;; plantuml-mode
+        ;; Unowned
 
-     )
-  )
+        )
+      )
+;;;; yushen-personaization
+
+(defun yubrshen/init-yushen-personalization ()
+  (message "calling use-package yushen-personalization")
+  (use-package yushen-personalization))
+
 ;;;; literate-tools
 ;; Tools for litreate programming
 
 (defun yubrshen/init-literate-tools ()
+  (message "calling use-package litreate-tools")
   (use-package literate-tools
     ))
 
 ;;;; org-config
 
 (defun yubrshen/init-org-config ()
+  (message "calling use-package org-config")
   (use-package org-config
     ;; :init
     ;; (setq org-plantuml-jar-path "~/bin/plantuml.jar")

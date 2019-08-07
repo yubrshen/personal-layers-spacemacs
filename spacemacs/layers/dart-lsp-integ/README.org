@@ -1,0 +1,13 @@
+Here is my own layer to enable dart-mode, by integrating language protocol for
+dart language.
+With the following dart layer for dart-mode, etc., my own dart support layer
+might be redundant or duplicate.
+
+Note, there is a layer called dart at the following:
+"/home/yshen/.emacs.d/layers/+lang/dart/"
+
+this layer should not be called dart, but dart-language-protocol-integration or
+something different to dart and show the intent.
+
+Some of the ob-dart configuration might be placed in the layer yubrshen of my
+own customization, as post-init (maybe)
