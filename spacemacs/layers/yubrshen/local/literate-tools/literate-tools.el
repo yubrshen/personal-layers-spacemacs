@@ -124,7 +124,7 @@ If buffer-or-name is nil return current buffer's mode."
   (interactive)
   (org-insert-heading)
   (org-do-demote)
-  )j
+  )
 
   ;; Shift the selected region right if distance is postive, left if
   ;; negative
