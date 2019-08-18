@@ -78,7 +78,7 @@ If buffer-or-name is nil return current buffer's mode."
          "#+NAME:function\n#+BEGIN_SRC python :noweb tangle :tangle \nHello world\n#+END_SRC \n")
 
 (defun goto-end-of-code-block ()
-  (re-search-forward code-block-end nil t 1) ; no raising error
+  (re-search-forward "#\\+END_SRC.*$" nil t 1) ; no raising error
   )
 
 (defun literate-extraction (beg end provide-name)
