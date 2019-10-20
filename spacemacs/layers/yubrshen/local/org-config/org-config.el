@@ -58,21 +58,24 @@
 ;;; Templates
 
 ;; New and simpler org-structure-template-alist after org-mode 9.2:
-;; (setq org-structure-template-often-header "src python :tangle ~/Dropbox/only-focus-besides-earning/odin-money/pipeline.py :noweb no-export")
 (setq org-structure-template-alist
-  '(("a" . "export ascii")
-     ("c" . "center")
-     ("C" . "comment")
-     ("e" . "example")
-     ("E" . "export")
-     ("h" . "export html")
-     ("l" . "export latex")
-     ("q" . "quote")
-     ("s" . "src ? :tangle :noweb no-export")
-     ("uml" . "src plantuml :file ?.png\n@startuml\n\n\@enduml")
-     ("v" . "verse")
-     ("z" . "src python :tangle ~/Dropbox/only-focus-besides-earning/odin-money/pipeline.py :noweb no-export") ; my current often used block header
-     ))
+  (append org-structure-template-alist
+    ;; must use append as org-structure-template-alist has already been set by
+    ;; Eric's config/org-pre-init
+    '(
+       ;; ("a" . "export ascii")
+       ;; ("c" . "center")
+       ;; ("C" . "comment")
+       ;; ("e" . "example")
+       ;; ("E" . "export")
+       ;; ("h" . "export html")
+       ;; ("l" . "export latex")
+       ;; ("q" . "quote")
+       ;; ("s" . "src ? :tangle :noweb no-export")
+       ("uml" . "src plantuml :file ?.png\n@startuml\n\n\@enduml")
+       ;; ("v" . "verse")
+       ("z" . "src python :tangle ~/Dropbox/only-focus-besides-earning/odin-money/pipeline.py :noweb no-export") ; my current often used block header
+       )))
 ;; For more sophisticated code boilers, use yas-snippet
 ;; I'm defining the same keys as those for easy-template
 ;; Note, the command to start the new org-structure-template in spacemacs is , ib
