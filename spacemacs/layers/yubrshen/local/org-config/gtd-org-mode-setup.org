@@ -1,0 +1,45 @@
+* Notes on the requirements for proper task management system
+** The required workflow:
+
+*** Task/thought capture: Solved
+- , c (for command)
+- Need to setup the capture file
+
+*** Refiling the task to project: Possible to solve
+- Refiling
+- ,sr (command)
+- Need to setup across files, and to depths of headings
+-
+
+*** Scheduling, prioritizing, etc.: solved
+    - agenda view
+    - ,at (command)
+    - Need to setup the agenda-files
+
+*** Review, and report: not yet solved
+
+** Remarks
+
+- It's a good idea to have the concept of NEXT task before the other TODO task
+- A good idea to have common org settings gathered in one file so that it can be
+  included the other org files. For example,
+
+#+SETUPFILE: gtd-settings.org
+
+** Study the code of gtd-org-mode-setup.el
+
+*** Try to a top down approach to under a unfamiliar code base
+
+By try to find out if and where a function is used in the code-base, to find out
+the top level functions, and focus on the top level functions to study. Use the
+top level function as the context to understand the functions being called in
+the top level.
+
+**** my/org-skip-inode-and-root
+It's used in 12 places.
+
+It's used in the expression of setq for org-agenda-custom-commands
+for the sub-command of general agenda
+for the tag pattern of "-{^@.*}+TODO={NEXT\\|TODO}"
+used for org-agenda-skip-function,
+essentially a skipping or filtering function

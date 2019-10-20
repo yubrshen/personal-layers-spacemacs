@@ -5,16 +5,24 @@
 
 ;;; Declare packages to be customized
 (setq yubrshen-packages
-      '((yushen-personalization :location local)
-        (literate-tools :location local)
-        (org-config :location local)       ; use org-config of my old config for org as a package as is.
-        ;; It actually breaks when I don't require org.
+  '((yushen-personalization :location local)
+     (literate-tools :location local)
+     (org-config :location local)       ; use org-config of my old config for org as a package as is.
+     ;; It actually breaks when I don't require org.
 
-        ;; plantuml-mode
-        ;; Unowned
+     ;; plantuml-mode
+     ;; Unowned
+     pynt                               ; PYthon iNTeractive
+     poporg                             ; pop org-mode buffer to edit comments
+     )
+  )
 
-        )
-      )
+;;;; poporg
+(defun yubrshen/init-poporg ()
+  (use-package poporg
+    :bind (("C-c /" . poporg-dwim))))
+;; http://pragmaticemacs.com/emacs/write-code-comments-in-org-mode-with-poporg/
+
 ;;;; yushen-personaization
 
 (defun yubrshen/init-yushen-personalization ()
@@ -37,6 +45,11 @@
     ;; :init
     ;; (setq org-plantuml-jar-path "~/bin/plantuml.jar")
     ))
+
+;;;; pynt
+
+(defun yubrshen/init-pynt ()
+  (use-package pynt))
 
 
 ;;; Unowned
