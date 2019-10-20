@@ -9,6 +9,12 @@
 (require 'ox-latex)
 (require 'bibtex)
 
+;;;; Utilities
+;;;;; current-directory
+(defun current-directory ()
+  (file-name-directory (or load-file-name buffer-file-name)))
+
+
 ;;;; Setup reveal
 
 ;;(load "~/programming/write-slides-with-emacs-org-reveal/org-reveal/ox-reveal.el")
@@ -309,7 +315,7 @@
 
 ;;; Org-capture and Org-agenda customization
 
-(load-file "./gtd-org-mode-setup.el")
+(load-file (concat (current-directory) "gtd-org-mode-setup.el"))
 
 ;; (setq org-directory "~/zoom-out")
 ;; set proper value of org-capture file; have a centralized notes.org
