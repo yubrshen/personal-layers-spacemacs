@@ -98,7 +98,7 @@ otherwise, return nil"
   my/project "~/Dropbox/org/projects-and-tasks.org"
   my/someday "~/Dropbox/org/someday.org"
   my/birthdays "~/Dropbox/org/birthdays.org"
-  org-agenda-files (list my/project)
+  org-agenda-files (list my/project my/inbox)
 ;;;; org-todo-keywords
   org-todo-keywords
   '((sequence "TODO(t)" "|" "DONE(d)")
@@ -274,7 +274,19 @@ otherwise, return nil"
              (org-agenda-skip-function
                '(or
                   (my/org-skip-inode-and-root)
-                  (org-agenda-skip-entry-if 'scheduled)))))))))
+                  (org-agenda-skip-entry-if 'scheduled)))))))
+     ("W" "Weekly review"
+       ;; https://emacs.stackexchange.com/questions/52994/org-mode-agenda-show-list-of-tasks-done-in-the-past-and-not-those-clocked
+       ;; show an agenda view with all items marked as "DONE" in the last weeks
+       agenda ""
+       ((org-agenda-start-day "-7d")    ; started 7 days ago
+         (org-agenda-span 7)            ; for 7 days
+         (org-agenda-start-on-weekday 1) ; starting on Monday
+         (org-agenda-start-with-log-mode '(closed)) ; include only closed
+         (org-agenda-archives-mode t)   ; include archived items
+         (org-agenda-skip-function '(org-agenda-skip-entry-if 'notregexp "^\\*\\* DONE ")) ; only the 2nd level tasks
+         ))
+     ))
 
 ;; The following is not needed for my own as I'm using Spacemacs
 ;; (define-key global-map "\C-cc" 'org-capture)
