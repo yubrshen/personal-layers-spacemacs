@@ -9,6 +9,12 @@
 (require 'ox-latex)
 (require 'bibtex)
 
+;;;; Utilities
+;;;;; current-directory
+(defun current-directory ()
+  (file-name-directory (or load-file-name buffer-file-name)))
+
+
 ;;;; Setup reveal
 
 ;;(load "~/programming/write-slides-with-emacs-org-reveal/org-reveal/ox-reveal.el")
@@ -53,17 +59,23 @@
 
 ;; New and simpler org-structure-template-alist after org-mode 9.2:
 (setq org-structure-template-alist
-  '(("a" . "export ascii")
-     ("c" . "center")
-     ("C" . "comment")
-     ("e" . "example")
-     ("E" . "export")
-     ("h" . "export html")
-     ("l" . "export latex")
-     ("q" . "quote")
-     ("s" . "src ? :tangle :noweb no-export")
-     ("uml" . "src plantuml :file ?.png\n@startuml\n\n\@enduml")
-     ("v" . "verse")))
+  (append org-structure-template-alist
+    ;; must use append as org-structure-template-alist has already been set by
+    ;; Eric's config/org-pre-init
+    '(
+       ;; ("a" . "export ascii")
+       ;; ("c" . "center")
+       ;; ("C" . "comment")
+       ;; ("e" . "example")
+       ;; ("E" . "export")
+       ;; ("h" . "export html")
+       ;; ("l" . "export latex")
+       ;; ("q" . "quote")
+       ;; ("s" . "src ? :tangle :noweb no-export")
+       ("uml" . "src plantuml :file ?.png\n@startuml\n\n\@enduml")
+       ;; ("v" . "verse")
+       ("z" . "src python :tangle ~/Dropbox/only-focus-besides-earning/odin-money/pipeline.py :noweb no-export") ; my current often used block header
+       )))
 ;; For more sophisticated code boilers, use yas-snippet
 ;; I'm defining the same keys as those for easy-template
 ;; Note, the command to start the new org-structure-template in spacemacs is , ib
@@ -144,21 +156,11 @@
 
 ;;; Export
 (ox-extras-activate '(ignore-headlines))
-;;;; Using xelatex, not used
-;; Use xelatex instead of pdflatex to support Chinese text in unicode
-;; (setq
-;;  org-latex-pdf-process
-;;  '("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
-;;    "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
-;;    "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
-
 ;;;; Use xelatex or pdflatex based on buffer string #+LATEX_CMD: xelatex
 
 ;; The following is based on
 ;; based on https://orgmode.org/worg/org-faq.html#using-xelatex-for-pdf-export
-;; (require 'ox-latex)
-;; (setq org-latex-listings t) ; using listing package, becoming obsoleted as 8/8/2019
-
+(require 'ox-latex)
 ;; Originally taken from Bruno Tavernier: http://thread.gmane.org/gmane.emacs.orgmode/31150/focus=31432
 ;; but adapted to use latexmk 4.20 or higher.
 ;; combinde with the suggestion by
@@ -167,83 +169,72 @@
 
 ;; Specify default packages to be included in every tex file, whether pdflatex or xelatex
 (setq org-latex-packages-alist
-      '(("" "graphicx" t)
-        ("" "longtable" nil)
-        ("" "float" nil)))
+  '(("" "graphicx" t)
+     ("" "longtable" nil)
+     ("" "float" nil)))
 
 (defun my-auto-tex-cmd (file)
   "When exporting from .org with latex, automatically run latex,
      pdflatex, or xelatex as appropriate, using latexmk."
   (let ((texcmd))
     (if (string-match "LATEX_CMD: xelatex" (buffer-string))
-        (progn                            ; else
-          ;; xelatex -> .pdf
-          (setq texcmd "latexmk -shell-escape -f -pdflatex=xelatex -8bit -pdf %f") ; removing -quiet
-          ;; Packages to include when xelatex is used
-          (setq org-latex-default-packages-alist
-                (append org-latex-default-packages-alist
-                        '(("" "fontspec" t)
-                          ("" "xunicode" t)
-                          ("" "url" t)
-                          ("" "rotating" t)
-                          ("american" "babel" t)
-                          ("babel" "csquotes" t)
-                          ("" "soul" t)
-                          ("xetex" "hyperref" nil)
-                          )))
-          (setq org-latex-classes
-                (append org-latex-classes
-                        (cons '("article"
-                                "\\documentclass[11pt,article,oneside]{memoir}"
-                                ("\\section{%s}" . "\\section*{%s}")
-                                ("\\subsection{%s}" . "\\subsection*{%s}")
-                                ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-                                ("\\paragraph{%s}" . "\\paragraph*{%s}")
-                                ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))
-                              org-latex-classes)))
+      (progn                            ; else
+        ;; xelatex -> .pdf
+        (setq texcmd "latexmk -shell-escape -f -pdflatex=xelatex -8bit -pdf %f") ; removing -quiet
+        ;; Packages to include when xelatex is used
+        (setq org-latex-default-packages-alist
+          ;;(append org-latex-default-packages-alist
+          '(("" "fontspec" t)
+             ("" "xunicode" t)
+             ("" "url" t)
+             ("" "rotating" t)
+             ("american" "babel" t)
+             ("babel" "csquotes" t)
+             ("" "soul" t)
+             ("xetex" "hyperref" nil)
+             )
+          ;;)
           )
+        (setq org-latex-classes
+          (append org-latex-classes
+            (cons '("article"
+                     "\\documentclass[11pt,article,oneside]{memoir}"
+                     ("\\section{%s}" . "\\section*{%s}")
+                     ("\\subsection{%s}" . "\\subsection*{%s}")
+                     ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                     ("\\paragraph{%s}" . "\\paragraph*{%s}")
+                     ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))
+              org-latex-classes)
+            )
+          )
+        )
       (progn                            ; else
         ;; pdflatex -> .pdf
         ;; (setq texcmd "latexmk -pdf -quiet %f")
         (setq texcmd "latexmk -shell-escape -f -pdf %f") ; remove quiet, add -f
         ;; default packages for ordinary latex or pdflatex export
         (setq org-latex-default-packages-alist
-              (append org-latex-default-packages-alist
-                      '(("AUTO" "inputenc" t)
-                        ("T1"   "fontenc"   t)
-                        (""     "fixltx2e"  nil)
-                        ("normalem" "ulem" t)
-                        (""     "wrapfig"   nil)
-                        (""     "soul"      t)
-                        (""     "textcomp"  t)
-                        (""     "marvosym"  t)
-                        (""     "wasysym"   t)
-                        (""     "latexsym"  t)
-                        (""     "amssymb"   t)
-                        (""     "hyperref"  nil))))))
+          ;;(append org-latex-default-packages-alist
+
+          '(("AUTO" "inputenc" t)
+             ("T1"   "fontenc"   t)
+             (""     "fixltx2e"  nil)
+             ("normalem" "ulem" t)
+             (""     "wrapfig"   nil)
+             (""     "soul"      t)
+             (""     "textcomp"  t)
+             (""     "marvosym"  t)
+             (""     "wasysym"   t)
+             (""     "latexsym"  t)
+             (""     "amssymb"   t)
+             (""     "hyperref"  nil))
+          ;;)
+          )))
     ;; LaTeX compilation command
     (setq org-latex-pdf-process (list texcmd))))
 ;; (add-hook 'org-export-latex-after-initial-vars-hook 'my-auto-tex-cmd)
 ;; org-export-latex-after-initial-vars-hook does not exit.
 (add-hook 'org-export-before-parsing-hook 'my-auto-tex-cmd) ; must add hook to org-export-before-parsing-hook
-
-;;;; Exporting Chinese with xelatex, not being used
-
-;; The following solution also work after fixing the variable org-latex-pdf-process
-;; remove -to- in it.
-;; But it's less generic.
-;; (setq
-;;   org-latex-pdf-process
-;;   '("xelatex -shell-escape -interaction nonstopmode -output-directory %o %f"
-;;      "xelatex -shell-escape  -interaction nonstopmode -output-directory %o %f"
-;;      "xelatex -shell-escape  -interaction nonstopmode -output-directory %o %f"))
-;; To export Chinese text, the org file must have the following options set:
-;; #+LATEX_HEADER: \usepackage{xltxtra}
-;; #+LATEX_HEADER: \setmainfont{WenQuanYi Micro Hei}
-;; The above setting does not work, as of Aug. 8, 2019.
-
-;; There are a lot more configuration to learn from
-;; https://github.com/kaushalmodi/.emacs.d/blob/42831e8997f7a3c90bf4bd37ae9f03c48277781d/setup-files/setup-org.el#L413-L584
 
 ;;;; Use listing to export source code
 
@@ -280,21 +271,22 @@
             (assq-delete-all :results org-babel-default-header-args)))
 
 (org-babel-do-load-languages 'org-babel-load-languages
-                             '((latex .   t)
-                               (python .  t)
-                               (haskell . t)
-                               (clojure . t)
-                               (dot .     t)
-                               (emacs-lisp . t)
-                               (C . t)
-                               (ditaa . t)
-                               (js . t)
-                               (latex . t)
-                               (shell . t) ; sh does not work, shell works
-                               (plantuml . t)
-                               (sql . t)
-                               )
-                             )
+  '((latex .   t)
+     (python .  t)
+     (ein . t)
+     (haskell . t)
+     (clojure . t)
+     (dot .     t)
+     (emacs-lisp . t)
+     (C . t)
+     (ditaa . t)
+     (js . t)
+     (latex . t)
+     (shell . t) ; sh does not work, shell works
+     (plantuml . t)
+     (sql . t)
+     )
+  )
 
 ;;; Files
 
@@ -308,7 +300,7 @@
 ;; (load "~/programming/emacs-lisp/literate-tools.el")
 ;;(load "~/elisp/spacemacs/layers/yubrshen/local/literate-tools/literate-tools.el")
 (load "../literate-tools/literate-tools.el")
-(setq Org-Reveal-root "~/yshen/Dropbox/reveal.js")
+(setq Org-Reveal-root "~/Dropbox/reveal.js")
 ;; (setq Org-Reveal-root "file:///home/yubrshen/programming/write-slides-with-emacs-org-reveal/reveal.js")
 (setq Org-Reveal-title-slide nil)
 
@@ -328,39 +320,20 @@
 
 ;;; Org-capture and Org-agenda customization
 
-(setq org-directory "~/zoom-out")
-; set proper value of org-capture file; have a centralized notes.org
-(setq org-default-notes-file (concat org-directory "/" "notes.org"))
+(load-file (concat (current-directory) "gtd-org-mode-setup.el"))
+
+;; (setq org-directory "~/zoom-out")
+;; set proper value of org-capture file; have a centralized notes.org
+;; (setq org-default-notes-file (concat org-directory "/" "notes.org"))
+;;(setq org-contacts-files '("~/Dropbox/contacts.org"))
+;;(setq org-agenda-files   '("~/Dropbox/schedule.org"))
 
 (setq org-plantuml-jar-path "~/bin/plantuml.jar")
 
-(setq org-todo-keywords
-      '((sequence "TODO(t)" "|" "DONE(d)")
-        (sequence "REPORT(r)" "BUG(b)" "KNOWNCAUSE(k)" "|" "FIXED(f)")
-        (sequence "HOLD(h)" "|" "PNEDING(p)" "|"  "CANCELED(c)")))
-;; (setq org-tag-alist '((:startgroup . nil)
-;;                       ("heavy" . ?h) ("light" . ?l)
-;;                       (:endgroup . nil)
-;;                       ))
+;; (setq org-todo-keywords
+;;       '((sequence "TODO(t)" "|" "DONE(d)")
+;;         (sequence "REPORT(r)" "BUG(b)" "KNOWNCAUSE(k)" "|" "FIXED(f)")
+;;         (sequence "HOLD(h)" "|" "PNEDING(p)" "|"  "CANCELED(c)")))
 
-(setq org-tag-alist '((:startgroup)
-                      ("heavy" . ?h) ("light" . ?l)
-                      (:endgroup)
-                      ))
-;; (setq org-tag-alist (quote ((:startgroup)
-;;                             ("work" . ?w)
-;;                             ("home" . ?h)
-;;                             (:endgroup)
-;;                             ("oss" . ?o)
-;;                             ("xpack" . ?x)
-;;                             ("book" . ?b)
-;;                             ("support" . ?s)
-;;                             ("docs" . ?d)
-;;                             ("emacs" . ?e)
-;;                             ("tech" . ?t)
-;;                             ("noexport" . ?n)
-;;                             ("recurring" . ?r)
-;;                             ("WAITING" . ?W) ("HOLD" . ?H)
-;;                             ("NOTE" . ?n) ("CANCELLED" . ?c))))
 ;;; Provide
 (provide 'org-config)

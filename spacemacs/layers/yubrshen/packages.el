@@ -13,9 +13,21 @@
 
         ;; plantuml-mode
         ;; Unowned
-
+        pynt                               ; PYthon iNTeractive
+        poporg                             ; pop org-mode buffer to edit comments
         )
       )
+
+;;; Owned
+
+;;;; poporg
+(defun yubrshen/init-poporg ()
+  (use-package poporg
+    :bind (("C-c /" . poporg-dwim))))
+;; http://pragmaticemacs.com/emacs/write-code-comments-in-org-mode-with-poporg/
+
+;;        )
+;;      )
 ;;;; latex-preview-pane
 (defun yubrshen/init-latex-preview-pane ()
   (use-package latex-preview-pane))
@@ -42,6 +54,11 @@
     ;; :init
     ;; (setq org-plantuml-jar-path "~/bin/plantuml.jar")
     ))
+
+;;;; pynt
+
+(defun yubrshen/init-pynt ()
+  (use-package pynt))
 
 
 ;;; Unowned
