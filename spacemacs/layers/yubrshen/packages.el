@@ -5,7 +5,8 @@
 
 ;;; Declare packages to be customized
 (setq yubrshen-packages
-      '((yushen-personalization :location local)
+      '(latex-preview-pane
+        (yushen-personalization :location local)
         (literate-tools :location local)
         (org-config :location local)       ; use org-config of my old config for org as a package as is.
         ;; It actually breaks when I don't require org.
@@ -15,6 +16,10 @@
 
         )
       )
+;;;; latex-preview-pane
+(defun yubrshen/init-latex-preview-pane ()
+  (use-package latex-preview-pane))
+
 ;;;; yushen-personaization
 
 (defun yubrshen/init-yushen-personalization ()

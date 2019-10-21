@@ -250,10 +250,10 @@
 ;; The following will conflict with the setting to use xelatex!
 ;; With pdflatex
 ;; (setq org-latex-pdf-process '("latexmk -shell-escape -f -pdf %f")) ; remove -quiet, add -f (force) to be able to debug.
-(setq org-latex-listings 'minted)                           ; using minted, minted must be used instead of the package of listings in order to support Dart source code.
+;; (setq org-latex-listings 'minted)
+;; using minted, minted must be used instead of the package of listings in order to support Dart source code.
 (add-to-list 'org-latex-packages-alist '("newfloat" "minted"))
 
-(add-to-list 'org-latex-packages-alist '("newfloat" "minted"))
 ;; (setq org-latex-minted-options '(("frame" "lines")
 ;;                                  ("fontsize" "\\scriptsize")
 ;;                                  ("xleftmargin" "\\parindent")
@@ -303,9 +303,6 @@
                       ("\\.x?html?\\'" . "/usr/bin/firefox %s")
                       ("\\.pdf\\'" . default)))
 
-(setq org-contacts-files '("~/Dropbox/contacts.org"))
-(setq org-agenda-files   '("~/Dropbox/schedule.org"))
-
 ;;; Yu Shen's babel related customization
 
 ;; (load "~/programming/emacs-lisp/literate-tools.el")
@@ -341,6 +338,29 @@
       '((sequence "TODO(t)" "|" "DONE(d)")
         (sequence "REPORT(r)" "BUG(b)" "KNOWNCAUSE(k)" "|" "FIXED(f)")
         (sequence "HOLD(h)" "|" "PNEDING(p)" "|"  "CANCELED(c)")))
+;; (setq org-tag-alist '((:startgroup . nil)
+;;                       ("heavy" . ?h) ("light" . ?l)
+;;                       (:endgroup . nil)
+;;                       ))
 
+(setq org-tag-alist '((:startgroup)
+                      ("heavy" . ?h) ("light" . ?l)
+                      (:endgroup)
+                      ))
+;; (setq org-tag-alist (quote ((:startgroup)
+;;                             ("work" . ?w)
+;;                             ("home" . ?h)
+;;                             (:endgroup)
+;;                             ("oss" . ?o)
+;;                             ("xpack" . ?x)
+;;                             ("book" . ?b)
+;;                             ("support" . ?s)
+;;                             ("docs" . ?d)
+;;                             ("emacs" . ?e)
+;;                             ("tech" . ?t)
+;;                             ("noexport" . ?n)
+;;                             ("recurring" . ?r)
+;;                             ("WAITING" . ?W) ("HOLD" . ?H)
+;;                             ("NOTE" . ?n) ("CANCELLED" . ?c))))
 ;;; Provide
 (provide 'org-config)
