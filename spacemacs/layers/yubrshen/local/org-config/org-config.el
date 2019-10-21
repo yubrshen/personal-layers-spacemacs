@@ -271,22 +271,22 @@
             (assq-delete-all :results org-babel-default-header-args)))
 
 (org-babel-do-load-languages 'org-babel-load-languages
-  '((latex .   t)
-     (python .  t)
-     (ein . t)
-     (haskell . t)
-     (clojure . t)
-     (dot .     t)
-     (emacs-lisp . t)
-     (C . t)
-     (ditaa . t)
-     (js . t)
-     (latex . t)
-     (shell . t) ; sh does not work, shell works
-     (plantuml . t)
-     (sql . t)
-     )
-  )
+                             '((latex .   t)
+                               (python .  t)
+                               ;; (ein . t) ; depends on ob-ein package, and pynt
+                               (haskell . t)
+                               (clojure . t)
+                               (dot .     t)
+                               (emacs-lisp . t)
+                               (C . t)
+                               (ditaa . t)
+                               (js . t)
+                               (latex . t)
+                               (shell . t) ; sh does not work, shell works
+                               (plantuml . t)
+                               (sql . t)
+                               )
+                             )
 
 ;;; Files
 

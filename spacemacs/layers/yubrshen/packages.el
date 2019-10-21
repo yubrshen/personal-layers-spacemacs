@@ -13,7 +13,7 @@
 
         ;; plantuml-mode
         ;; Unowned
-        pynt                               ; PYthon iNTeractive
+        ;; pynt                               ; PYthon iNTeractive, might have problem with loading ein in the office Windows Linux Subsystem
         poporg                             ; pop org-mode buffer to edit comments
         )
       )
@@ -57,8 +57,8 @@
 
 ;;;; pynt
 
-(defun yubrshen/init-pynt ()
-  (use-package pynt))
+;; (defun yubrshen/init-pynt ()
+;;   (use-package pynt))
 
 
 ;;; Unowned
