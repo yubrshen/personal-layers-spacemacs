@@ -143,7 +143,9 @@ otherwise, return nil"
                             (agenda . ""))
 ;;;; org-agenda-custom-commands
  org-agenda-custom-commands
- '(("r" "Repeated or scheduled tasks"
+ '(
+;;;;; Repeated or scheduled
+   ("r" "Repeated or scheduled tasks"
     ((tags
       "SCHEDULED={<[^<>.+]+[.+]?[+][^<>.+]+>}+TODO={NEXT\\|TODO}+daily"
       ((org-agenda-overriding-header "Daily Tasks")
@@ -154,14 +156,76 @@ otherwise, return nil"
      (tags-todo "SCHEDULED={<[^<>.+]+>}+TODO={NEXT\\|TODO}"
                 ((org-agenda-overriding-header "Scheduled Tasks"))))
     ((org-agenda-sorting-strategy '(scheduled-up priority-down))))
+;;;;; Tasks needing attention
    ("a" "Tasks that need attention"
     ((tags "TODO=\"HOLD\""
            ((org-agenda-overriding-header "HOLD")))
      (tags "TODO={DONE\\|CANCELLED}"
            ((org-agenda-overriding-header "DONE or CANCELLED at top level")
             (org-agenda-skip-function #'my/org-skip-non-root-task-subtree)))))
+;;;;; General Agenda
    ("g" "My General Agenda"
     (
+     (agenda ""
+             ((org-agenda-files (list my/inbox my/project my/birthdays))
+              (org-agenda-span 'day)))
+     (tags "@heavy-@home+TODO=\"NEXT\""
+           ((org-agenda-overriding-header "NEXT @heavy")
+            (org-agenda-sorting-strategy '(priority-down))
+            (org-agenda-skip-function
+             '(or
+               (my/org-skip-inode-and-root)
+               (org-agenda-skip-entry-if 'scheduled)))))
+     (tags "-@heavy-@home+TODO=\"NEXT\""
+           ((org-agenda-overriding-header "NEXT non-heavy")
+            (org-agenda-sorting-strategy '(priority-down))
+            (org-agenda-skip-function
+             '(or
+               (my/org-skip-inode-and-root)
+               (org-agenda-skip-entry-if 'scheduled)))))
+     (tags "@heavy-@home+TODO=\"TODO\""
+           ((org-agenda-overriding-header "@heavy")
+            (org-agenda-sorting-strategy '(priority-down))
+            (org-agenda-skip-function
+             '(or
+               (my/org-skip-inode-and-root)
+               (org-agenda-skip-entry-if 'scheduled)))))
+     (tags "-@heavy-@home+TODO=\"TODO\""
+           ((org-agenda-overriding-header "non-heavy")
+            (org-agenda-sorting-strategy '(priority-down))
+            (org-agenda-skip-function
+             '(or
+               (my/org-skip-inode-and-root)
+               (org-agenda-skip-entry-if 'scheduled)))))
+     (tags "@home+@heavy+TODO=\"NEXT\""
+           ((org-agenda-overriding-header "NEXT @heavy@home")
+            (org-agenda-sorting-strategy '(priority-down))
+            (org-agenda-skip-function
+             '(or
+               (my/org-skip-inode-and-root)
+               (org-agenda-skip-entry-if 'scheduled)))))
+     (tags "@home-@heavy+TODO=\"NEXT\""
+           ((org-agenda-overriding-header "NEXT @home")
+            (org-agenda-sorting-strategy '(priority-down))
+            (org-agenda-skip-function
+             '(or
+               (my/org-skip-inode-and-root)
+               (org-agenda-skip-entry-if 'scheduled)))))
+     (tags "@home+@heavy+TODO=\"TODO\""
+           ((org-agenda-overriding-header "@heavy@home")
+            (org-agenda-sorting-strategy '(priority-down))
+            (org-agenda-skip-function
+             '(or
+               (my/org-skip-inode-and-root)
+               (org-agenda-skip-entry-if 'scheduled)))))
+     (tags "@home-@heavy+TODO=\"TODO\""
+           ((org-agenda-overriding-header "@home")
+            (org-agenda-sorting-strategy '(priority-down))
+            (org-agenda-skip-function
+             '(or
+               (my/org-skip-inode-and-root)
+               (org-agenda-skip-entry-if 'scheduled)))))
+
      (tags "TODO={.*}"
            ((org-agenda-files (list my/inbox))
             (org-agenda-overriding-header "Inbox")
@@ -176,7 +240,7 @@ otherwise, return nil"
             (org-agenda-skip-function #'my/org-skip-inode-and-root)
             (org-agenda-sorting-strategy
              '(todo-state-down priority-down))))
-     (tags "TODO=\"TODO\"+work"
+     (tags "TODO=\"TODO\"+@office"
            ((org-agenda-overriding-header "Active Work Projects")
             (org-agenda-sorting-strategy '(priority-down))
             (org-tags-match-list-sublevels nil)
@@ -184,7 +248,7 @@ otherwise, return nil"
              '(or
                (my/org-skip-leaves)
                (org-agenda-skip-subtree-if 'nottodo '("NEXT"))))))
-     (tags "TODO=\"TODO\"+work"
+     (tags "TODO=\"TODO\"+@office"
            ((org-agenda-overriding-header "Stuck Work Projects")
             (org-agenda-sorting-strategy '(priority-down))
             (org-tags-match-list-sublevels nil)
@@ -192,7 +256,7 @@ otherwise, return nil"
              '(or
                (my/org-skip-leaves)
                (org-agenda-skip-subtree-if 'todo '("NEXT"))))))
-     (tags "TODO=\"TODO\"-work"
+     (tags "TODO=\"TODO\"-@office"
            ((org-agenda-overriding-header "Active Projects")
             (org-agenda-sorting-strategy '(priority-down))
             (org-tags-match-list-sublevels nil)
@@ -200,7 +264,7 @@ otherwise, return nil"
              '(or
                (my/org-skip-leaves)
                (org-agenda-skip-subtree-if 'nottodo '("NEXT"))))))
-     (tags "TODO=\"TODO\"-work"
+     (tags "TODO=\"TODO\"-@office"
            ((org-agenda-overriding-header "Stuck Projects")
             (org-agenda-sorting-strategy '(priority-down))
             (org-tags-match-list-sublevels nil)
@@ -208,68 +272,9 @@ otherwise, return nil"
              '(or
                (my/org-skip-leaves)
                (org-agenda-skip-subtree-if 'todo '("NEXT"))))))
-     (agenda ""
-             ((org-agenda-files (list my/inbox my/project my/birthdays))
-              (org-agenda-span 'day)))
-     (tags "@errand+TODO=\"NEXT\""
-           ((org-agenda-overriding-header "NEXT @errand")
-            (org-agenda-sorting-strategy '(priority-down))
-            (org-agenda-skip-function
-             '(or
-               (my/org-skip-inode-and-root)
-               (org-agenda-skip-entry-if 'scheduled)))))
-     (tags "@review+TODO=\"NEXT\""
-           ((org-agenda-overriding-header "NEXT @review")
-            (org-agenda-sorting-strategy '(priority-down))
-            (org-agenda-skip-function
-             '(or
-               (my/org-skip-inode-and-root)
-               (org-agenda-skip-entry-if 'scheduled)))))
-     (tags "@home+work+TODO=\"NEXT\""
-           ((org-agenda-overriding-header "NEXT work@home")
-            (org-agenda-sorting-strategy '(priority-down))
-            (org-agenda-skip-function
-             '(or
-               (my/org-skip-inode-and-root)
-               (org-agenda-skip-entry-if 'scheduled)))))
-     (tags "@home-work+TODO=\"NEXT\""
-           ((org-agenda-overriding-header "NEXT @home")
-            (org-agenda-sorting-strategy '(priority-down))
-            (org-agenda-skip-function
-             '(or
-               (my/org-skip-inode-and-root)
-               (org-agenda-skip-entry-if 'scheduled)))))
      (tags "@read_watch_listen+TODO=\"NEXT\""
            ((org-agenda-overriding-header "NEXT @read/watch/listen")
             (org-agenda-sorting-strategy '(priority-down effort-up))
-            (org-agenda-skip-function
-             '(or
-               (my/org-skip-inode-and-root)
-               (org-agenda-skip-entry-if 'scheduled)))))
-     (tags "@errand+TODO=\"TODO\""
-           ((org-agenda-overriding-header "@errand")
-            (org-agenda-sorting-strategy '(priority-down))
-            (org-agenda-skip-function
-             '(or
-               (my/org-skip-inode-and-root)
-               (org-agenda-skip-entry-if 'scheduled)))))
-     (tags "@review+TODO=\"TODO\""
-           ((org-agenda-overriding-header "@review")
-            (org-agenda-sorting-strategy '(priority-down))
-            (org-agenda-skip-function
-             '(or
-               (my/org-skip-inode-and-root)
-               (org-agenda-skip-entry-if 'scheduled)))))
-     (tags "@home+work+TODO=\"TODO\""
-           ((org-agenda-overriding-header "work@home")
-            (org-agenda-sorting-strategy '(priority-down))
-            (org-agenda-skip-function
-             '(or
-               (my/org-skip-inode-and-root)
-               (org-agenda-skip-entry-if 'scheduled)))))
-     (tags "@home-work+TODO=\"TODO\""
-           ((org-agenda-overriding-header "@home")
-            (org-agenda-sorting-strategy '(priority-down))
             (org-agenda-skip-function
              '(or
                (my/org-skip-inode-and-root)
@@ -280,7 +285,9 @@ otherwise, return nil"
             (org-agenda-skip-function
              '(or
                (my/org-skip-inode-and-root)
-               (org-agenda-skip-entry-if 'scheduled)))))))
+               (org-agenda-skip-entry-if 'scheduled)))))
+     ))
+;;;;; Weekly review
    ("W" "Weekly review"
     ;; https://emacs.stackexchange.com/questions/52994/org-mode-agenda-show-list-of-tasks-done-in-the-past-and-not-those-clocked
     ;; show an agenda view with all items marked as "DONE" in the last weeks
