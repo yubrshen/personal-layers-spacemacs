@@ -51,3 +51,4 @@
          ))))
 
 (setq-default abbrev-mode t)
+(auto-save-visited-mode)
