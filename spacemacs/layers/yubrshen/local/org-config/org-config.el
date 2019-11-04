@@ -59,23 +59,25 @@
 
 ;; New and simpler org-structure-template-alist after org-mode 9.2:
 (setq org-structure-template-alist
-  (append org-structure-template-alist
-    ;; must use append as org-structure-template-alist has already been set by
-    ;; Eric's config/org-pre-init
-    '(
-       ;; ("a" . "export ascii")
-       ;; ("c" . "center")
-       ;; ("C" . "comment")
-       ;; ("e" . "example")
-       ;; ("E" . "export")
-       ;; ("h" . "export html")
-       ;; ("l" . "export latex")
-       ;; ("q" . "quote")
-       ;; ("s" . "src ? :tangle :noweb no-export")
-       ("uml" . "src plantuml :file ?.png\n@startuml\n\n\@enduml")
-       ;; ("v" . "verse")
-       ("z" . "src python :tangle ~/Dropbox/only-focus-besides-earning/odin-money/pipeline.py :noweb no-export") ; my current often used block header
-       )))
+      ;; (append org-structure-template-alist
+      ;; must use append as org-structure-template-alist has already been set by
+      ;; Eric's config/org-pre-init
+      '(
+        ;; ("a" . "export ascii")
+        ;; ("c" . "center")
+        ;; ("C" . "comment")
+        ;; ("e" . "example")
+        ;; ("E" . "export")
+        ("h" . "export html")
+        ("l" . "export latex")
+        ;; ("q" . "quote")
+        ("s" . "src ? :tangle :noweb no-export")
+        ("uml" . "src plantuml :file ?.png\n@startuml\n\n\@enduml")
+        ("v" . "verse")
+        ("z" . "src python :tangle ~/Dropbox/only-focus-besides-earning/odin-money/pipeline.py :noweb no-export") ; my current often used block header
+        )
+      ;;)
+      )
 ;; For more sophisticated code boilers, use yas-snippet
 ;; I'm defining the same keys as those for easy-template
 ;; Note, the command to start the new org-structure-template in spacemacs is , ib
@@ -168,74 +170,73 @@
 ;; fixing the the content of texcmd for xelatex
 
 ;; Specify default packages to be included in every tex file, whether pdflatex or xelatex
-(setq org-latex-packages-alist
-  '(("" "graphicx" t)
-     ("" "longtable" nil)
-     ("" "float" nil)))
+;; (setq org-latex-packages-alist
+;;   '(("" "graphicx" t)
+;;      ("" "longtable" nil)
+;;      ("" "float" nil)))
+;; graphicx, longtable, and float cause problem with pdflatex
 
 (defun my-auto-tex-cmd (file)
   "When exporting from .org with latex, automatically run latex,
      pdflatex, or xelatex as appropriate, using latexmk."
   (let ((texcmd))
     (if (string-match "LATEX_CMD: xelatex" (buffer-string))
-      (progn                            ; else
-        ;; xelatex -> .pdf
-        (setq texcmd "latexmk -shell-escape -f -pdflatex=xelatex -8bit -pdf %f") ; removing -quiet
-        ;; Packages to include when xelatex is used
-        (setq org-latex-default-packages-alist
-          ;;(append org-latex-default-packages-alist
-          '(("" "fontspec" t)
-             ("" "xunicode" t)
-             ("" "url" t)
-             ("" "rotating" t)
-             ("american" "babel" t)
-             ("babel" "csquotes" t)
-             ("" "soul" t)
-             ("xetex" "hyperref" nil)
-             )
-          ;;)
+        (progn
+          ;; xelatex -> .pdf
+          (setq texcmd "latexmk -shell-escape -f -pdflatex=xelatex -8bit -pdf %f") ; removing -quiet
+          ;; Packages to include when xelatex is used
+          (setq org-latex-default-packages-alist
+                '(("" "fontspec" t)
+                  ("" "xunicode" t)
+                  ("" "url" t)
+                  ("" "rotating" t)
+                  ("american" "babel" t)
+                  ("babel" "csquotes" t)
+                  ("" "soul" t)
+                  ("xetex" "hyperref" nil)
+                  )
+                )
+          (setq org-latex-classes
+                (append org-latex-classes
+                        (cons '("article"
+                                "\\documentclass[11pt,article,oneside]{memoir}"
+                                ("\\section{%s}" . "\\section*{%s}")
+                                ("\\subsection{%s}" . "\\subsection*{%s}")
+                                ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                                ("\\paragraph{%s}" . "\\paragraph*{%s}")
+                                ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))
+                              org-latex-classes)
+                        )
+                )
           )
-        (setq org-latex-classes
-          (append org-latex-classes
-            (cons '("article"
-                     "\\documentclass[11pt,article,oneside]{memoir}"
-                     ("\\section{%s}" . "\\section*{%s}")
-                     ("\\subsection{%s}" . "\\subsection*{%s}")
-                     ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-                     ("\\paragraph{%s}" . "\\paragraph*{%s}")
-                     ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))
-              org-latex-classes)
-            )
-          )
-        )
       (progn                            ; else
         ;; pdflatex -> .pdf
-        ;; (setq texcmd "latexmk -pdf -quiet %f")
         (setq texcmd "latexmk -shell-escape -f -pdf %f") ; remove quiet, add -f
         ;; default packages for ordinary latex or pdflatex export
         (setq org-latex-default-packages-alist
-          ;;(append org-latex-default-packages-alist
-
-          '(("AUTO" "inputenc" t)
-             ("T1"   "fontenc"   t)
-             (""     "fixltx2e"  nil)
-             ("normalem" "ulem" t)
-             (""     "wrapfig"   nil)
-             (""     "soul"      t)
-             (""     "textcomp"  t)
-             (""     "marvosym"  t)
-             (""     "wasysym"   t)
-             (""     "latexsym"  t)
-             (""     "amssymb"   t)
-             (""     "hyperref"  nil))
-          ;;)
-          )))
+              '(("AUTO" "inputenc" t)
+                ("T1"   "fontenc"   t)
+                (""     "fixltx2e"  nil)
+                ("normalem" "ulem" t)
+                (""     "wrapfig"   nil)
+                (""     "soul"      t)
+                (""     "textcomp"  t)
+                (""     "marvosym"  t)
+                (""     "wasysym"   t)
+                (""     "latexsym"  t)
+                (""     "amssymb"   t)
+                (""     "hyperref"  nil))
+              )
+        ;; geometry and minted causde trouble also with pdflatex
+        ;; (add-to-list 'org-latex-packages-alist '("margin=1cm" "geometry"))
+        ;; (add-to-list 'org-latex-packages-alist '("newfloat" "minted"))
+        ))
     ;; LaTeX compilation command
     (setq org-latex-pdf-process (list texcmd))))
 ;; (add-hook 'org-export-latex-after-initial-vars-hook 'my-auto-tex-cmd)
 ;; org-export-latex-after-initial-vars-hook does not exit.
 (add-hook 'org-export-before-parsing-hook 'my-auto-tex-cmd) ; must add hook to org-export-before-parsing-hook
-
+(load (concat (current-directory) "tufte-classes.el"))
 ;;;; Use listing to export source code
 
 ;; The following will conflict with the setting to use xelatex!
@@ -243,7 +244,7 @@
 ;; (setq org-latex-pdf-process '("latexmk -shell-escape -f -pdf %f")) ; remove -quiet, add -f (force) to be able to debug.
 ;; (setq org-latex-listings 'minted)
 ;; using minted, minted must be used instead of the package of listings in order to support Dart source code.
-(add-to-list 'org-latex-packages-alist '("newfloat" "minted"))
+;; (add-to-list 'org-latex-packages-alist '("newfloat" "minted"))
 
 ;; (setq org-latex-minted-options '(("frame" "lines")
 ;;                                  ("fontsize" "\\scriptsize")
@@ -253,7 +254,7 @@
 
 ;;;; Customize the margine
 ;; Globablly change the marge for org export to PDF
-(add-to-list 'org-latex-packages-alist '("margin=1cm" "geometry"))
+;; (add-to-list 'org-latex-packages-alist '("margin=1cm" "geometry"))
 
 ;;;; Setup for exporting to Freemind
 
@@ -320,7 +321,7 @@
 
 ;;; Org-capture and Org-agenda customization
 
-(load-file (concat (current-directory) "gtd-org-mode-setup.el"))
+(load (concat (current-directory) "gtd-org-mode-setup.el"))
 
 ;; (setq org-directory "~/zoom-out")
 ;; set proper value of org-capture file; have a centralized notes.org
